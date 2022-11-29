@@ -1,0 +1,15 @@
+SELECT 
+t1.CustomerID as id,
+CONCAT(t3.FirstName, " ", t3.LastName) as cliente,
+COUNT(DISTINCT t1.SalesOrderID) as transacciones,
+ROUND(SUM(t2.OrderQty)/COUNT(DISTINCT t1.SalesOrderID),1) as cantidad_promedio,
+ROUND(SUM(t2.LineTotal)/COUNT(DISTINCT t1.SalesOrderID),2) as ventas_promedio,
+# DATE_FORMAT(t3.ModifiedDate, "%Y-%m-%d") as registro,
+# curdate(),
+DATEDIFF(CURDATE(),DATE_FORMAT(t3.ModifiedDate, "%Y-%m-%d")) as antiguedad
+
+FROM salesorderheader as t1
+	JOIN salesorderdetail as t2 ON t1.SalesOrderID = t2.SalesOrderID
+    JOIN contact as t3 ON t1.ContactID = t3.ContactID
+    GROUP BY t1.CustomerID
+    ORDER BY transacciones DESC
